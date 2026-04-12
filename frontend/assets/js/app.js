@@ -590,20 +590,37 @@ function showToast(message, type = 'success') {
 // Initialize App
 // ============================================
 
-auth.onAuthStateChanged(async (user) => {
-    if (user) {
-        currentUser = user;
-        currentToken = await user.getIdToken();
-        showAuthContainer(false);
-        await loadUserData();
-    } else {
-        showAuthContainer(true);
-        showPage('dashboard');
+// Wait for Firebase to be ready
+function initializeApp() {
+    console.log('initializeApp called, auth type:', typeof auth);
+    if (typeof auth === 'undefined') {
+        console.log('⏳ Firebase auth not ready, retrying in 100ms...');
+        setTimeout(initializeApp, 100);
+        return;
     }
-});
 
-// Load food database on page load
+    console.log('✅ Firebase auth is ready, setting up listener');
+    auth.onAuthStateChanged(async (user) => {
+        console.log('🔄 Auth state changed, user:', user ? user.email : 'null');
+        if (user) {
+            currentUser = user;
+            currentToken = await user.getIdToken();
+            showAuthContainer(false);
+            await loadUserData();
+        } else {
+            showAuthContainer(true);
+            showPage('dashboard');
+        }
+    });
+}
+
+// Start app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('📄 DOM Content Loaded, initializing app...');
+    initializeApp();
     // Set up event listeners
-    document.getElementById('customMealForm').addEventListener('submit', handleAddMeal);
+    const customForm = document.getElementById('customMealForm');
+    if (customForm) {
+        customForm.addEventListener('submit', handleAddMeal);
+    }
 });

@@ -6,9 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Nutrition Tracker</title>
     <link rel="stylesheet" href="assets/css/styles.css">
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK - MUST load before firebase-config.js -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+    <!-- Config and App scripts load after Firebase SDK -->
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/app.js"></script>
 </head>
 
 <body>
@@ -356,9 +359,6 @@
 
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
-
-    <script src="assets/js/firebase-config.js"></script>
-    <script src="assets/js/app.js"></script>
 </body>
 
 </html>
