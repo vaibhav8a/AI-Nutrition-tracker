@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Nutrition Tracker</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                🥗 <span>AI Nutrition Tracker</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#" class="nav-link active" onclick="showPage('dashboard')">Dashboard</a>
+                <a href="#" class="nav-link" onclick="showPage('meals')">Add Meal</a>
+                <a href="#" class="nav-link" onclick="showPage('insights')">Insights</a>
+                <a href="#" class="nav-link" onclick="showPage('settings')">Settings</a>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Auth Container -->
+    <div id="authContainer" class="auth-container active">
+        <div class="auth-card">
+            <h1>AI Nutrition Tracker</h1>
+            <p class="subtitle">Track your nutrition, achieve your goals</p>
+
+            <!-- Login Tab -->
+            <div id="loginTab" class="auth-tab active">
+                <h2>Login</h2>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn-primary btn-block">Login</button>
+                </form>
+                <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('signup')">Sign Up</a></p>
+            </div>
+
+            <!-- Signup Tab -->
+            <div id="signupTab" class="auth-tab">
+                <h2>Create Account</h2>
+                <form onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPasswordConfirm">Confirm Password</label>
+                        <input type="password" id="signupPasswordConfirm" required>
+                    </div>
+                    <button type="submit" class="btn-primary btn-block">Sign Up</button>
+                </form>
+                <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login')">Login</a></p>
+            </div>
+
+            <div id="authMessage" class="auth-message"></div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="appContainer" class="app-container">
+        <!-- Dashboard Page -->
+        <div id="dashboardPage" class="page active">
+            <div class="page-header">
+                <h1>Today's Nutrition</h1>
+                <p id="dateDisplay" class="date-display"></p>
+            </div>
+
+            <!-- Goals Setup Modal -->
+            <div id="goalsModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Setup Your Daily Goals</h2>
+                        <button class="close-btn" onclick="closeGoalsModal()">&times;</button>
+                    </div>
+                    <form onsubmit="handleSetGoals(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="goalCalories">Daily Calories</label>
+                                <input type="number" id="goalCalories" min="1000" max="5000" value="2000" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="goalProtein">Protein (g)</label>
+                                <input type="number" id="goalProtein" min="20" max="300" value="150" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="goalCarbs">Carbs (g)</label>
+                                <input type="number" id="goalCarbs" min="50" max="500" value="250" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="goalFats">Fats (g)</label>
+                                <input type="number" id="goalFats" min="20" max="150" value="65" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn-primary">Save Goals</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Macro Cards -->
+            <div class="macro-grid">
+                <div class="macro-card">
+                    <div class="macro-header">
+                        <h3>Calories</h3>
+                        <span class="macro-unit">kcal</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="caloriesBar">
+                            <div class="progress-fill" id="caloriesFill"></div>
+                        </div>
+                    </div>
+                    <div class="macro-info">
+                        <span id="caloriesConsumed" class="consumed">0</span>
+                        <span class="divider">/</span>
+                        <span id="caloriesGoal" class="goal">2000</span>
+                    </div>
+                    <div class="macro-remaining" id="caloriesRemaining">2000 kcal remaining</div>
+                </div>
+
+                <div class="macro-card">
+                    <div class="macro-header">
+                        <h3>Protein</h3>
+                        <span class="macro-unit">g</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="proteinBar">
+                            <div class="progress-fill" id="proteinFill"></div>
+                        </div>
+                    </div>
+                    <div class="macro-info">
+                        <span id="proteinConsumed" class="consumed">0</span>
+                        <span class="divider">/</span>
+                        <span id="proteinGoal" class="goal">150</span>
+                    </div>
+                    <div class="macro-remaining" id="proteinRemaining">150g remaining</div>
+                </div>
+
+                <div class="macro-card">
+                    <div class="macro-header">
+                        <h3>Carbs</h3>
+                        <span class="macro-unit">g</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="carbsBar">
+                            <div class="progress-fill" id="carbsFill"></div>
+                        </div>
+                    </div>
+                    <div class="macro-info">
+                        <span id="carbsConsumed" class="consumed">0</span>
+                        <span class="divider">/</span>
+                        <span id="carbsGoal" class="goal">250</span>
+                    </div>
+                    <div class="macro-remaining" id="carbsRemaining">250g remaining</div>
+                </div>
+
+                <div class="macro-card">
+                    <div class="macro-header">
+                        <h3>Fats</h3>
+                        <span class="macro-unit">g</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="fatsBar">
+                            <div class="progress-fill" id="fatsFill"></div>
+                        </div>
+                    </div>
+                    <div class="macro-info">
+                        <span id="fatsConsumed" class="consumed">0</span>
+                        <span class="divider">/</span>
+                        <span id="fatsGoal" class="goal">65</span>
+                    </div>
+                    <div class="macro-remaining" id="fatsRemaining">65g remaining</div>
+                </div>
+            </div>
+
+            <!-- Alerts Section -->
+            <div id="alertsSection" class="alerts-section" style="display: none;">
+                <h3>⚡ Notifications</h3>
+                <div id="alertsList" class="alerts-list"></div>
+            </div>
+
+            <!-- Meals Log -->
+            <div class="meals-section">
+                <h3>Today's Meals</h3>
+                <div id="mealsList" class="meals-list">
+                    <p class="empty-state">No meals logged yet</p>
+                </div>
+            </div>
+
+            <!-- AI Suggestions -->
+            <div class="suggestions-section">
+                <h3>🤖 AI Suggestions</h3>
+                <div id="suggestionsList" class="suggestions-list"></div>
+            </div>
+        </div>
+
+        <!-- Add Meal Page -->
+        <div id="mealsPage" class="page">
+            <div class="page-header">
+                <h1>Add Meal</h1>
+            </div>
+
+            <!-- Quick Add Buttons -->
+            <div class="quick-buttons">
+                <button class="btn-secondary" onclick="showFoodDatabase()">📋 Food Database</button>
+                <button class="btn-secondary" onclick="showCustomMeal()">✏️ Custom Meal</button>
+            </div>
+
+            <!-- Food Database Modal -->
+            <div id="foodDatabaseModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Food Database</h2>
+                        <button class="close-btn" onclick="closeFoodDatabaseModal()">&times;</button>
+                    </div>
+                    <div id="foodDatabaseList" class="food-list"></div>
+                </div>
+            </div>
+
+            <!-- Custom Meal Form -->
+            <div id="customMealForm" class="card" style="display: none;">
+                <h3>Log Custom Meal</h3>
+                <form onsubmit="handleAddMeal(event)">
+                    <div class="form-group">
+                        <label for="mealName">Food Name</label>
+                        <input type="text" id="mealName" placeholder="e.g., Grilled Chicken Breast" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mealCalories">Calories</label>
+                            <input type="number" id="mealCalories" min="0" step="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mealProtein">Protein (g)</label>
+                            <input type="number" id="mealProtein" min="0" step="0.1" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mealCarbs">Carbs (g)</label>
+                            <input type="number" id="mealCarbs" min="0" step="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mealFats">Fats (g)</label>
+                            <input type="number" id="mealFats" min="0" step="0.1" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mealType">Meal Type</label>
+                        <select id="mealType">
+                            <option value="breakfast">Breakfast</option>
+                            <option value="lunch">Lunch</option>
+                            <option value="dinner">Dinner</option>
+                            <option value="snack">Snack</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary btn-block">Add Meal</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Insights Page -->
+        <div id="insightsPage" class="page">
+            <div class="page-header">
+                <h1>Weekly Insights</h1>
+            </div>
+
+            <div class="insights-container">
+                <div class="card">
+                    <h3>📊 Weekly Summary</h3>
+                    <div class="stats-grid">
+                        <div class="stat">
+                            <span class="stat-label">Avg. Calories</span>
+                            <span id="avgCalories" class="stat-value">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Avg. Protein</span>
+                            <span id="avgProtein" class="stat-value">0g</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Avg. Carbs</span>
+                            <span id="avgCarbs" class="stat-value">0g</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Avg. Fats</span>
+                            <span id="avgFats" class="stat-value">0g</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Detected Patterns</h3>
+                    <div id="patternsList" class="patterns-list">
+                        <p class="empty-state">No patterns detected yet</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📈 Daily History</h3>
+                    <div id="historyList" class="history-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settingsPage" class="page">
+            <div class="page-header">
+                <h1>Settings</h1>
+            </div>
+
+            <div class="settings-container">
+                <div class="card">
+                    <h3>Daily Goals</h3>
+                    <button class="btn-secondary" onclick="openGoalsModal()">Edit Goals</button>
+                </div>
+
+                <div class="card">
+                    <h3>Account</h3>
+                    <p id="accountEmail">Email: </p>
+                    <button class="btn-danger" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+
+</html>

@@ -11,6 +11,7 @@ load_dotenv()
 # Create Flask app
 app = create_app()
 
+
 @app.route('/', methods=['GET'])
 def home():
     """Home endpoint"""
@@ -26,10 +27,12 @@ def home():
         }
     }, 200
 
+
 @app.route('/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
     return {'status': 'healthy'}, 200
+
 
 if __name__ == '__main__':
     # Run the Flask development server
