@@ -10,14 +10,38 @@ const firebaseConfig = {
     measurementId: "G-H4MYCCRWG6"
 };
 
-// Initialize Firebase
-try {
-    firebase.initializeApp(firebaseConfig);
-    console.log('✅ Firebase initialized successfully');
-} catch (error) {
-    console.error('❌ Firebase initialization error:', error);
+// Wait for Firebase to be available
+let auth = null;
+let firebaseReady = false;
+
+function initFirebase() {
+    // Check for Firebase SDK from CDN
+    if (typeof firebase === 'undefined') {
+        console.log('⏳ Firebase SDK not loaded yet, retrying in 200ms...');
+        setTimeout(initFirebase, 200);
+        return;
+    }
+
+    try {
+        console.log('✅ Firebase SDK found!');
+        // Check if already initialized
+        if (!firebase.apps || firebase.apps.length === 0) {
+            firebase.initializeApp(firebaseConfig);
+            console.log('✅ Firebase app initialized');
+        } else {
+            console.log('✅ Firebase app already initialized');
+        }
+
+        // Get auth instance
+        auth = firebase.auth();
+        firebaseReady = true;
+        console.log('✅ Firebase auth ready!');
+    } catch (error) {
+        console.error('❌ Firebase init error:', error.message);
+        setTimeout(initFirebase, 200);
+    }
 }
 
-// Firebase Authentication reference
-const auth = firebase.auth();
-console.log('✅ Auth object created:', typeof auth);
+// Start Firebase initialization immediately
+initFirebase();
+initFirebase();

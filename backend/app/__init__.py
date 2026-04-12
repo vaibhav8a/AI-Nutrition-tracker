@@ -13,7 +13,8 @@ def create_app():
     app = Flask(__name__)
 
     # Enable CORS for frontend communication
-    CORS(app, origins=["http://localhost:5000", "http://localhost:5001", "http://localhost:8000", "http://localhost:3000", "127.0.0.1:8000", "127.0.0.1:5001"])
+    CORS(app, origins=["http://localhost:5000", "http://localhost:5001",
+         "http://localhost:8000", "http://localhost:3000", "127.0.0.1:8000", "127.0.0.1:5001"])
 
     # Initialize Firebase
     initialize_firebase()

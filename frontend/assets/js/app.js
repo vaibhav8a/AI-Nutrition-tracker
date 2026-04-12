@@ -12,6 +12,28 @@ let todayDate = new Date().toISOString().split('T')[0];
 // Authentication Functions
 // ============================================
 
+// Utility function to ensure auth is ready
+async function ensureAuthReady() {
+    let attempts = 0;
+    console.log('🔍 Checking if Firebase auth is ready...');
+
+    while ((auth === null || typeof auth === 'undefined') && attempts < 50) {
+        console.log(`⏳ Attempt ${attempts + 1}/50: Firebase auth not ready yet...`);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+    }
+
+    if (auth === null || typeof auth === 'undefined') {
+        console.error('❌ Firebase auth is still null after 50 attempts!');
+        console.error('🔍 Current auth value:', auth);
+        console.error('🔍 Firebase object exists?', typeof firebase !== 'undefined');
+        throw new Error('Firebase auth failed to initialize after 5 seconds');
+    }
+
+    console.log('✅ Firebase auth is ready!');
+    return auth;
+}
+
 async function handleSignup(event) {
     event.preventDefault();
 
@@ -27,8 +49,11 @@ async function handleSignup(event) {
     showLoading(true);
 
     try {
+        // Ensure auth is ready
+        const authInstance = await ensureAuthReady();
+
         // Create user in Firebase
-        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const userCredential = await authInstance.createUserWithEmailAndPassword(email, password);
         currentUser = userCredential.user;
 
         // Get ID token
@@ -56,17 +81,27 @@ async function handleLogin(event) {
     showLoading(true);
 
     try {
-        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        // Ensure auth is ready
+        const authInstance = await ensureAuthReady();
+
+        console.log('🔐 Attempting to sign in with:', email);
+        const userCredential = await authInstance.signInWithEmailAndPassword(email, password);
         currentUser = userCredential.user;
         currentToken = await currentUser.getIdToken();
 
+        console.log('✅ Sign in successful:', currentUser.email);
         showAuthMessage('Logged in successfully!', 'success');
 
+        // Immediately hide auth and show app
         setTimeout(() => {
+            console.log('🏠 Redirecting to dashboard...');
             showAuthContainer(false);
+            showPage('dashboard');
+            // Load user data in background
             loadUserData();
-        }, 500);
+        }, 1000);
     } catch (error) {
+        console.error('❌ Login error:', error.message);
         showAuthMessage(error.message, 'error');
     } finally {
         showLoading(false);
@@ -76,7 +111,8 @@ async function handleLogin(event) {
 async function logout() {
     if (confirm('Are you sure you want to logout?')) {
         try {
-            await auth.signOut();
+            const authInstance = await ensureAuthReady();
+            await authInstance.signOut();
             currentUser = null;
             currentToken = null;
             showAuthContainer(true);
@@ -106,9 +142,10 @@ function showAuthMessage(message, type) {
 // ============================================
 
 async function loadUserData() {
-    showLoading(true);
-
     try {
+        console.log('📥 Loading user data...');
+        showLoading(true);
+
         // Check if goals are set
         const goalsResponse = await fetch(`${API_BASE_URL}/goals/get`, {
             headers: { 'Authorization': `Bearer ${currentToken}` }
@@ -117,25 +154,33 @@ async function loadUserData() {
         if (goalsResponse.ok) {
             const data = await goalsResponse.json();
             userGoals = data.goals;
+            console.log('✅ Goals loaded:', userGoals);
+
+            // Load today's summary
+            await loadTodaysSummary();
+
+            // Load recommendations
+            await loadRecommendations();
         } else if (goalsResponse.status === 404) {
+            console.log('📋 No goals set yet, showing modal');
             // Goals not set, show modal
-            showGoalsModal();
-            return;
+            setTimeout(() => {
+                showGoalsModal();
+            }, 500);
+        } else {
+            throw new Error(`Failed to load goals: ${goalsResponse.status}`);
         }
 
-        // Load today's summary
-        await loadTodaysSummary();
-
-        // Load recommendations
-        await loadRecommendations();
-
         // Update account email
-        document.getElementById('accountEmail').textContent = `Email: ${currentUser.email}`;
+        if (currentUser) {
+            document.getElementById('accountEmail').textContent = `Email: ${currentUser.email}`;
+        }
 
         // Update date display
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-US', options);
     } catch (error) {
+        console.error('❌ Error loading user data:', error.message);
         showToast('Error loading user data: ' + error.message, 'error');
     } finally {
         showLoading(false);
@@ -514,11 +559,16 @@ function showPage(pageName) {
     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
 
     // Show selected page
-    document.getElementById(pageName + 'Page').classList.add('active');
+    const pageElement = document.getElementById(pageName + 'Page');
+    if (pageElement) {
+        pageElement.classList.add('active');
+    }
 
-    // Update nav links
-    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-    event.target.classList.add('active');
+    // Update nav links - only if event exists and has target
+    if (event && event.target) {
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        event.target.classList.add('active');
+    }
 
     // Load specific data
     if (pageName === 'insights') {
@@ -592,8 +642,8 @@ function showToast(message, type = 'success') {
 
 // Wait for Firebase to be ready
 function initializeApp() {
-    console.log('initializeApp called, auth type:', typeof auth);
-    if (typeof auth === 'undefined') {
+    console.log('initializeApp called, auth value:', auth);
+    if (auth === null || typeof auth === 'undefined') {
         console.log('⏳ Firebase auth not ready, retrying in 100ms...');
         setTimeout(initializeApp, 100);
         return;
@@ -606,7 +656,13 @@ function initializeApp() {
             currentUser = user;
             currentToken = await user.getIdToken();
             showAuthContainer(false);
-            await loadUserData();
+            try {
+                await loadUserData();
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showPage('dashboard');
+            }
+            showPage('dashboard');
         } else {
             showAuthContainer(true);
             showPage('dashboard');
