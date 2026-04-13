@@ -1,0 +1,167 @@
+food_name,calories,protein,carbs,fats
+Egg (1 whole),78,6,1,5
+Egg Whites (3),51,11,1,0
+Chicken Breast (100g),165,31,0,3.6
+Fish (100g),206,22,0,12
+Paneer (100g),265,18,6,20
+Tofu (100g),144,15,3,9
+Milk (250ml),150,8,12,8
+Greek Yogurt (100g),59,10,3.6,0.4
+Protein Shake,120,24,3,1
+Rice (100g cooked),130,2.5,28,0.3
+Brown Rice (100g),111,2.6,23,0.9
+Roti (1 medium),120,3,20,3
+Oats (50g),190,6,32,3.5
+Bread (2 slices),140,6,24,2
+Brown Bread (2 slices),140,6,24,2
+Banana (1 medium),105,1.3,27,0.4
+Apple (1 medium),95,0.5,25,0.3
+Orange (1 medium),62,1.2,15.4,0.2
+Boiled Potato (100g),87,2,20,0.1
+Sweet Potato (100g),86,1.6,20,0.1
+Almonds (10 pieces),70,2.5,2.5,6
+Cashews (10 pieces),87,2.8,4.7,7
+Peanut Butter (1 tbsp),95,4,3,8
+Butter (1 tbsp),102,0.1,0,11.5
+Cheese Slice,113,7,1,9
+Dal (1 cup),180,12,30,2
+Chickpeas (1 cup),269,14.5,45,4.2
+Rajma (1 cup),225,15,40,1
+Idli (2 pieces),130,4,28,0.5
+Dosa (1 plain),168,3,30,3.7
+Upma (1 cup),192,5,30,6
+Poha (1 cup),180,4,30,5
+Maggi (1 pack),350,8,50,14
+Pizza Slice,285,12,36,10
+Burger,295,17,30,12
+French Fries (medium),365,4,48,17
+Coca Cola (330ml),139,0,35,0
+Orange Juice (250ml),110,2,25,0
+Quinoa (100g cooked),120,4.4,21,1.9
+Barley (100g cooked),123,2.3,28,0.4
+Millet (100g cooked),119,3.5,23,1
+Buckwheat (100g),92,3.4,20,0.6
+Amaranth (100g),102,3.8,19,1.6
+Chia Seeds (10g),49,1.6,4,3.1
+Flax Seeds (10g),53,1.8,3,4.2
+Sunflower Seeds (10g),58,2.1,2,5
+Pumpkin Seeds (10g),56,3,1.5,4.5
+Sesame Seeds (10g),57,1.7,2.1,5
+Soy Milk (250ml),105,6.3,12,3.6
+Almond Milk (250ml),60,2,8,2.5
+Coconut Milk (100ml),230,2.3,6,24
+Oat Milk (250ml),120,3,16,5
+Rice Milk (250ml),130,2,22,2
+Lentil Soup (1 bowl),180,12,25,3
+Tomato Soup (1 bowl),90,2,18,2
+Mushroom Soup (1 bowl),110,4,12,6
+Broccoli (100g),55,3.7,11,0.6
+Cauliflower (100g),25,2,5,0.3
+Spinach (100g),23,2.9,3.6,0.4
+Kale (100g),49,4.3,9,0.9
+Cabbage (100g),25,1.3,6,0.1
+Zucchini (100g),17,1.2,3.1,0.3
+Carrot (100g),41,0.9,10,0.2
+Beetroot (100g),43,1.6,10,0.2
+Cucumber (100g),16,0.7,4,0.1
+Bell Pepper (100g),31,1,6,0.3
+Onion (100g),40,1.1,9,0.1
+Garlic (10g),15,0.6,3.3,0
+Green Peas (100g),81,5,14,0.4
+Corn (100g),86,3.2,19,1.2
+Avocado Toast,220,6,20,14
+Hummus (50g),166,8,14,9
+Falafel (3 pcs),200,8,20,12
+Pita Bread,170,6,33,1
+Shawarma Chicken Wrap,350,25,30,15
+Shawarma Veg Wrap,300,10,40,10
+Sushi Roll Veg,200,6,35,3
+Sushi Roll Chicken,250,12,30,8
+Tempura (veg),220,4,25,12
+Ramen (1 bowl),350,10,50,12
+Udon Noodles,310,9,55,6
+Pad Thai,400,12,60,14
+Kimchi (100g),15,2,3,0.5
+Bibimbap,450,15,60,15
+Tortilla (1),150,4,25,3
+Tacos (2),300,12,30,15
+Burrito Bowl,500,20,55,18
+Nacho Cheese Dip,180,6,10,14
+Guacamole (50g),80,1,4,7
+Pasta Alfredo,400,12,45,20
+Pasta Marinara,300,10,50,8
+Lasagna,450,20,40,25
+Mac and Cheese,350,12,45,18
+Risotto,350,8,50,12
+Gnocchi,250,6,45,5
+Bruschetta,180,4,25,6
+Focaccia Bread,250,7,40,8
+Croissant,231,5,26,12
+Bagel,289,11,56,2
+Muffin,300,5,45,12
+Donut,260,3,31,14
+Cupcake,250,3,35,10
+Cheesecake Slice,321,6,25,22
+Brownie,250,3,30,14
+Pudding (1 cup),150,4,20,5
+Custard (1 cup),140,4,22,4
+Milkshake (chocolate),300,8,45,10
+Smoothie Bowl,280,6,50,8
+Granola Bar,150,3,20,7
+Trail Mix Bar,200,5,22,12
+Energy Balls (2),180,6,18,10
+Peanut Chikki,200,6,25,10
+Til Ladoo,180,5,20,9
+Coconut Ladoo,210,3,25,12
+Halwa (carrot),250,4,30,12
+Halwa (suji),270,5,35,10
+Jalebi (100g),350,3,80,10
+Rasgulla (2),150,4,35,0
+Gulab Jamun (2),300,4,45,12
+Kheer (1 cup),200,6,30,6
+Payasam,220,5,35,7
+Shrikhand,250,8,30,10
+Basundi,300,8,35,15
+Kulfi,220,5,25,12
+Frozen Yogurt,120,4,20,2
+Ice Popsicle,80,0,20,0
+Energy Gel,100,0,25,0
+Electrolyte Drink,50,0,12,0
+Sports Drink,80,0,21,0
+Protein Pancake,220,20,20,6
+Protein Waffle,230,18,22,7
+Protein Cookie,200,15,18,8
+Protein Muffin,250,18,25,9
+Protein Brownie,220,20,20,10
+Chicken Soup Clear,120,15,5,4
+Vegetable Broth,50,2,10,1
+Bone Broth,150,20,5,3
+Egg Drop Soup,100,8,6,5
+Hot and Sour Soup,120,6,15,4
+Spring Onion Pancake,250,6,35,10
+Stuffed Capsicum,180,8,20,8
+Stuffed Tomato,160,6,18,7
+Stuffed Mushroom,150,7,12,9
+Stuffed Zucchini,140,6,15,6
+Vegetable Cutlet,200,5,25,10
+Paneer Cutlet,250,10,20,15
+Chicken Cutlet,280,18,20,14
+Fish Cutlet,260,16,18,15
+Egg Cutlet,240,12,15,14
+Vegetable Roll,220,6,30,8
+Paneer Roll,300,12,28,16
+Chicken Roll,320,20,30,14
+Egg Roll,280,14,25,12
+Frankie Veg,250,8,35,10
+Frankie Chicken,300,18,30,12
+Frankie Paneer,320,15,28,14
+Club Sandwich,350,20,30,18
+BLT Sandwich,400,22,28,22
+Grilled Veg Sandwich,280,10,35,10
+Grilled Paneer Sandwich,320,14,30,16
+Grilled Chicken Sandwich,350,25,28,14
+Open Toast Avocado,200,5,20,12
+Open Toast Mushroom,180,6,18,10
+Open Toast Cheese,220,8,20,14
+Open Toast Tomato,160,4,22,6
+Open Toast Peanut Butter,250,8,20,16

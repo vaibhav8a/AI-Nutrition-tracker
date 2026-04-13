@@ -107,9 +107,15 @@ def verify_token():
         user_doc = db.collection('users').document(uid).get()
 
         if not user_doc.exists:
-            return jsonify({'error': 'User not found'}), 404
-
-        user_data = user_doc.to_dict()
+            # Create user document if it doesn't exist (can happen with direct Firebase SDK login)
+            print(f"📝 Creating user document for UID: {uid}")
+            db.collection('users').document(uid).set({
+                'email': decoded_token.get('email', ''),
+                'goals_set': False
+            }, merge=True)
+            user_data = {'goals_set': False}
+        else:
+            user_data = user_doc.to_dict()
 
         return jsonify({
             'valid': True,

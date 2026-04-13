@@ -89,7 +89,7 @@
             </div>
 
             <!-- Goals Setup Modal -->
-            <div id="goalsModal" class="modal" style="display: none;">
+            <div id="goalsModal" class="modal">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h2>Setup Your Daily Goals</h2>
@@ -227,18 +227,22 @@
 
             <!-- Quick Add Buttons -->
             <div class="quick-buttons">
-                <button class="btn-secondary" onclick="showFoodDatabase()">📋 Food Database</button>
+                <button class="btn-secondary" onclick="showFoodSuggestions()">🔥💪 Suggestions</button>
                 <button class="btn-secondary" onclick="showCustomMeal()">✏️ Custom Meal</button>
             </div>
 
-            <!-- Food Database Modal -->
-            <div id="foodDatabaseModal" class="modal" style="display: none;">
-                <div class="modal-content">
+            <!-- Food Suggestions Modal -->
+            <div id="foodSuggestionsModal" class="modal">
+                <div class="modal-content modal-large">
                     <div class="modal-header">
-                        <h2>Food Database</h2>
-                        <button class="close-btn" onclick="closeFoodDatabaseModal()">&times;</button>
+                        <h2>🔥💪 Suggested Foods</h2>
+                        <button class="close-btn" onclick="closeFoodSuggestionsModal()">&times;</button>
                     </div>
-                    <div id="foodDatabaseList" class="food-list"></div>
+                    <div class="modal-search">
+                        <input type="text" id="foodSearchInput" class="search-input"
+                            placeholder="Search foods by name..." onkeyup="filterFoodSuggestions(this.value)">
+                    </div>
+                    <div id="foodSuggestionsList" class="food-suggestions-list"></div>
                 </div>
             </div>
 
@@ -340,7 +344,9 @@
             <div class="settings-container">
                 <div class="card">
                     <h3>Daily Goals</h3>
-                    <button class="btn-secondary" onclick="openGoalsModal()">Edit Goals</button>
+                    <button class="btn-secondary" onclick="setGoals()">Edit Goals</button>
+                    <button class="btn-danger" onclick="resetDailyGoals()" style="margin-left: 10px;">Reset to
+                        Default</button>
                 </div>
 
                 <div class="card">
