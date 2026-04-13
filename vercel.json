@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "public": false,
+  "buildCommand": "echo 'Frontend ready'",
+  "outputDirectory": "frontend",
+  "env": {
+    "API_BASE_URL": "@api_base_url"
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
