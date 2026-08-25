@@ -1,1 +1,12 @@
 backend/serviceAccountKey.json
+
+# Environment — never commit real credentials
+.env
+.env.local
+.env.*.local
+*.env
+!.env.example
+
+# Firebase service-account keys
+serviceAccountKey.json
+*-firebase-adminsdk-*.json
